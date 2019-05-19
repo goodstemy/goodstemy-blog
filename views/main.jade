@@ -1,0 +1,18 @@
+extends ./base.jade
+block content
+    .container
+        .row
+            .column
+                each val in posts
+                    .post
+                        h2.title= val.title
+                        p.description= val.description
+                        p.body= val.body
+                        .row
+                            .column
+                                a(class='full' href='post/' + val.id)
+                                    button(class='button button-outline')= 'Read full'
+                            .column
+                                div.likes
+                                    img(src='https://png.pngtree.com/svg/20161221/1833edf79c.svg' onclick='like(' + val.id + ')')
+                                    i(id='likes-' + val.id)= val.likes

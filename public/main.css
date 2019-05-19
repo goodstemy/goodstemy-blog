@@ -1,0 +1,69 @@
+body {
+    margin-top: 50px;
+    margin-bottom: 50px;
+}
+
+.post {
+    -webkit-box-shadow: 1px 18px 91px -4px rgba(87,87,87,0.59);
+    -moz-box-shadow: 1px 18px 91px -4px rgba(87,87,87,0.59);
+    box-shadow: 1px 18px 91px -4px rgba(87,87,87,0.59);
+    margin: 50px 0;
+    border-radius: 8px;
+    padding: 30px;
+    transition: all .3s ease-in-out;
+}
+
+.post:hover {
+    -webkit-box-shadow: 1px 18px 91px 10px rgba(87,87,87,0.59);
+    -moz-box-shadow: 1px 18px 91px 10px rgba(87,87,87,0.59);
+    box-shadow: 1px 18px 91px 10px rgba(87,87,87,0.59);
+}
+
+.title {
+    text-align: center;
+}
+
+.description {
+    opacity: .7;
+}
+
+.likes {
+    float: right;
+    width: 40px;
+    height: 18px;
+    margin-top: 8px;
+}
+
+.likes > img {
+    height: 100%;
+    vertical-align: middle;
+    cursor: pointer;
+    margin-right: 2px;
+}
+
+.likes > i {
+    height: 100%;
+    vertical-align: middle;
+}
+
+.post-title {
+    text-align: center;
+}
+
+.body {
+    text-align: justify;
+}
+
+.back-button {
+    float: left;
+    margin-top: 10px;
+}
+
+.comment {
+    -webkit-box-shadow: 0px 17px 180px -34px rgba(122,122,122,1);
+    -moz-box-shadow: 0px 17px 180px -34px rgba(122,122,122,1);
+    box-shadow: 0px 17px 180px -34px rgba(122,122,122,1);
+    padding: 25px;
+    margin: 50px 0;
+    border-radius: 8px;
+}
