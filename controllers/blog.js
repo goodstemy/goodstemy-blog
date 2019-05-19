@@ -80,12 +80,26 @@ router.post('/comment/create', (req, res) => {
     return res.sendStatus(400);
   }
 
-  return Comment.create({
-    sender,
-    text,
-    postId
-  }).then(() => res.sendStatus(200))
-    .catch(() => res.sendStatus(500));
+  return Post.findAll({
+    where: {id: postId}
+  }).then((posts) => {
+    if (!posts.length) {
+      return;
+    }
+
+    return Post.update({ commentsCount: posts[0].commentsCount + 1 }, {
+      where: {
+        id: postId
+      }
+    });
+  }).then(() => {
+    return Comment.create({
+      sender,
+      text,
+      postId
+    }).then(() => res.sendStatus(200))
+      .catch(() => res.sendStatus(500));
+  });
 });
 
 module.exports = router;

@@ -1,5 +1,7 @@
 extends ./base.jade
 block content
+    .new-post
+        img(src='/public/icons/add.png')
     .container
         .row
             .column
@@ -13,6 +15,10 @@ block content
                                 a(class='full' href='post/' + val.id)
                                     button(class='button button-outline')= 'Read full'
                             .column
+                                div.comments
+                                    img(src='/public/icons/chat.png')
+                                    i= val.commentsCount
                                 div.likes
-                                    img(src='https://png.pngtree.com/svg/20161221/1833edf79c.svg' onclick='like(' + val.id + ')')
-                                    i(id='likes-' + val.id)= val.likes
+                                    img(src='/public/icons/like.png')
+                                    i= val.likes
+

@@ -4,14 +4,14 @@ block content
         .row
             div(class='column column-10')
             div(class='column column-80')
-                button(class='button button-outline back-button' onclick='back()') Back
+                button(class='button button-outline back-button' id='back-button' onclick='back()') Back
                 h1.post-title= post.title
                 hr
                 p.description= post.description
                 .row
                 p.body= post.body
                 div.likes
-                    img(src='https://png.pngtree.com/svg/20161221/1833edf79c.svg' onclick='like(' + post.id + ')')
+                    img(src='/public/icons/like.png' onclick='like(' + post.id + ')')
                     i(id='likes-' + post.id)= post.likes
                 br
                 hr
