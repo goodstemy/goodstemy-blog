@@ -1,13 +1,13 @@
 const express = require('express');
+const Sequelize = require('sequelize');
 const Post = require('../models/posts');
 const Comment = require('../models/comments');
 const router = express.Router();
+const sequelize = new Sequelize('postgres://ivan:@localhost:5432/postgres');
 
 router.get('/', (req, res) => {
-  return Post.findAll({
-      order: ['id'],
-    })
-    .then((posts) => {
+  sequelize.query(`SELECT posts.*, (select count(*) from comments where posts.id = comments.post_id) as comments_count from posts order by posts.id;`)
+    .then(([posts, metadata]) => {
       res.render('main', {posts});
     })
     .catch((error) => {
@@ -19,10 +19,10 @@ router.get('/', (req, res) => {
 router.get('/post/:id', (req, res) => {
   const {id} = req.params;
 
-  return Promise.all([
+  Promise.all([
       Comment.findAll({
         where: {
-          postId: id
+          post_id: id
         }
       }),
       Post.findAll({
@@ -34,27 +34,31 @@ router.get('/post/:id', (req, res) => {
     .then(([comments, posts]) => {
       res.render('post', {comments, post: posts[0]});
     })
-    .catch(() => res.sendStatus(500));
+    .catch((error) => res.send(500, error));
 });
 
 router.get('/like/:id', (req, res) => {
   const {id} = req.params;
 
-  if (!id) return;
+  if (!id) {
+    return res.sendStatus(400);
+  }
 
-  return Post.findAll({
+  Post.findAll({
     where: {id}
-  }).then((post) => {
-    if (!post) {
-      return;
+  }).then((posts) => {
+    if (!posts.length) {
+      return res.sendStatus(400);
     }
 
-    return Post.update({ likes: post[0].likes + 1 }, {
+    res.sendStatus(200);
+
+    return Post.update({ likes: posts[0].likes + 1 }, {
       where: {
         id
       }
-    }).then(console.log).catch(console.error);
-  }).catch(console.error);
+    });
+  }).catch((error) => res.send(500, error));
 });
 
 router.post('/post/create', (req, res) => {
@@ -70,7 +74,7 @@ router.post('/post/create', (req, res) => {
     body,
     createdAt: +new Date()
   }).then(() => res.sendStatus(200))
-    .catch(() => res.sendStatus(500));
+    .catch((error) => res.send(500, error));
 });
 
 router.post('/comment/create', (req, res) => {
@@ -80,26 +84,21 @@ router.post('/comment/create', (req, res) => {
     return res.sendStatus(400);
   }
 
-  return Post.findAll({
+  Post.findAll({
     where: {id: postId}
   }).then((posts) => {
     if (!posts.length) {
       return;
     }
 
-    return Post.update({ commentsCount: posts[0].commentsCount + 1 }, {
-      where: {
-        id: postId
-      }
-    });
-  }).then(() => {
+    res.send(200);
+
     return Comment.create({
       sender,
       text,
-      postId
-    }).then(() => res.sendStatus(200))
-      .catch(() => res.sendStatus(500));
-  });
+      post_id: postId
+    });
+  }).catch((error) => res.send(500, error));
 });
 
 module.exports = router;

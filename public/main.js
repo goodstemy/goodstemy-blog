@@ -4,8 +4,14 @@ function like(postId) {
   }
   var likes = document.getElementById('likes-' + postId);
   likes.innerHTML = +likes.innerHTML + 1;
+  var likeButton = document.getElementById('like-button');
+  likeButton.style.transform = 'scale(1.3)';
 
-  fetch('/like/' + postId).catch(console.error);
+  fetch('/like/' + postId).then(() => {
+    setTimeout(() => {
+      likeButton.style.transform = 'scale(1)';
+    }, 100);
+  }).catch(console.error);
 }
 
 function back() {
@@ -31,5 +37,19 @@ function comment(postId) {
       'Content-Type': 'application/json'
     },
     body: JSON.stringify({sender: sender || 'Anonymous', text, postId})
+  }).then(() => {
+    setTimeout(() => location.reload(), 200);
   }).catch(console.error);
+}
+
+function openModal() {
+  var modalWindow = document.getElementById('modal');
+
+  modalWindow.style.display = 'block';
+}
+
+function closeModal() {
+  var modalWindow = document.getElementById('modal');
+
+  modalWindow.style.display = 'none';
 }

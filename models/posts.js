@@ -35,11 +35,6 @@ Post.init({
   createdAt: {
     type: Sequelize.DATE,
     allowNull: false
-  },
-  commentsCount: {
-    type: Sequelize.INTEGER,
-    allowNull: false,
-    defaultValue: 0
   }
 }, {
   sequelize,

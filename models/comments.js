@@ -14,7 +14,7 @@ sequelize
 class Comment extends Model {}
 
 Comment.init({
-  postId: {
+  post_id: {
     type: Sequelize.INTEGER,
     allowNull: false
   },

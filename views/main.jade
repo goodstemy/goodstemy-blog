@@ -1,6 +1,20 @@
 extends ./base.jade
 block content
-    .new-post
+    #modal
+        .row
+            div(class='column column-10')
+            div(class='column column-80' id='window')
+                    label(for='postTitle') Post title
+                    input(type='text' placeholder='My title' id='postTitle')
+                    label(for='postDesc') Post description
+                    textarea(placeholder='Optional...' id='postDesc')
+                    label(for='postBody') Content
+                    textarea(placeholder='Lorem ipsum dolor sit amet...' id='postBody')
+                    button(class='button button-outline' onclick='addPost()') Create post
+            div(class='column column-10')
+        div(id='close-modal' onclick='closeModal()')
+            img(src='/public/icons/add.png')
+    div(class='new-post' onclick='openModal()')
         img(src='/public/icons/add.png')
     .container
         .row
@@ -17,7 +31,7 @@ block content
                             .column
                                 div.comments
                                     img(src='/public/icons/chat.png')
-                                    i= val.commentsCount
+                                    i= val.comments_count
                                 div.likes
                                     img(src='/public/icons/like.png')
                                     i= val.likes

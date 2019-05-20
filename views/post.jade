@@ -11,7 +11,7 @@ block content
                 .row
                 p.body= post.body
                 div.likes
-                    img(src='/public/icons/like.png' onclick='like(' + post.id + ')')
+                    img(src='/public/icons/like.png' onclick='like(' + post.id + ')' id='like-button')
                     i(id='likes-' + post.id)= post.likes
                 br
                 hr
