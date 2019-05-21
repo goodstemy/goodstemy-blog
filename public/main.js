@@ -37,9 +37,7 @@ function comment(postId) {
       'Content-Type': 'application/json'
     },
     body: JSON.stringify({sender: sender || 'Anonymous', text, postId})
-  }).then(() => {
-    setTimeout(() => location.reload(), 200);
-  }).catch(console.error);
+  }).then(() => location.reload()).catch(console.error);
 }
 
 function openModal() {
