@@ -1,9 +1,12 @@
+require('dotenv').config();
+
 const express = require('express');
 const Sequelize = require('sequelize');
 const Post = require('../models/posts');
 const Comment = require('../models/comments');
+const Admin = require('../models/admins');
 const router = express.Router();
-const sequelize = new Sequelize('postgres://ivan:@localhost:5432/postgres');
+const sequelize = new Sequelize(process.env.POSTGRES_URI);
 
 router.get('/', async (req, res) => {
   const [posts, metadata] = await sequelize
@@ -14,30 +17,6 @@ router.get('/', async (req, res) => {
     });
 
   res.render('main', {posts});
-});
-
-router.get('/post/:id', async (req, res) => {
-  const {id} = req.params;
-
-  if (!id) {
-    return res.sendStatus(400);
-  }
-
-  const [comments, posts] = await Promise.all([
-      Comment.findAll({
-        where: {
-          post_id: id
-        }
-      }),
-      Post.findAll({
-        where: {
-          id
-        }
-      })
-    ])
-    .catch((error) => res.send(500, error));
-
-  res.render('post', {comments, post: posts[0]});
 });
 
 router.get('/like/:id', async (req, res) => {
@@ -54,7 +33,11 @@ router.get('/like/:id', async (req, res) => {
       res.sendStatus(500);
     });
 
-  res.send(200);
+  res.sendStatus(200);
+});
+
+router.get('/post/create', (req, res) => {
+  res.render('create_post');
 });
 
 router.post('/post/create', async (req, res) => {
@@ -64,14 +47,50 @@ router.post('/post/create', async (req, res) => {
     return res.sendStatus(400);
   }
 
+  const author = body.split('___')[1],
+        pass = body.split('___')[2];
+  const admins = await Admin.findAll({
+    where: {
+      name: author
+    }
+  });
+
+  if (admins[0].name !== author || admins[0].password !== pass) {
+    return res.sendStatus(403);
+  }
+
   await Post.create({
     title,
     description,
-    body,
+    body: body.split('___')[0],
     createdAt: +new Date()
   }).catch((error) => res.send(500, error));
 
-  res.send(200);
+  res.sendStatus(200);
+});
+
+router.get('/post/:id', async (req, res) => {
+  const {id} = req.params;
+
+  if (!id) {
+    return res.sendStatus(400);
+  }
+
+  const [comments, posts] = await Promise.all([
+    Comment.findAll({
+      where: {
+        post_id: id
+      }
+    }),
+    Post.findAll({
+      where: {
+        id
+      }
+    })
+  ])
+    .catch((error) => res.send(500, error));
+
+  res.render('post', {comments, post: posts[0]});
 });
 
 router.post('/comment/create', async (req, res) => {
@@ -95,7 +114,7 @@ router.post('/comment/create', async (req, res) => {
     return res.send(400, `Post with ${id} not found`);
   }
 
-  res.send(200);
+  res.sendStatus(200);
 });
 
 module.exports = router;

@@ -18,6 +18,10 @@ function back() {
   location = location.protocol + '//' + location.host
 }
 
+function redirectCreatePost() {
+  location = location.protocol + '//' + location.host + '/post/create'
+}
+
 function comment(postId) {
   if (!postId) {
     return;
@@ -38,6 +42,29 @@ function comment(postId) {
     },
     body: JSON.stringify({sender: sender || 'Anonymous', text, postId})
   }).then(() => location.reload()).catch(console.error);
+}
+
+function addPost() {
+  var title = document.getElementById('postTitle').value,
+      description = document.getElementById('postDesc').value,
+      body = document.getElementById('postBody').value;
+
+  if (!title || !body) {
+    alert('Oops! You should write an post title and body firstly');
+    return;
+  }
+
+  fetch('/post/create', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({title, description: description || '', body})
+  }).then((res) => {
+    if (res.status === 200) {
+      back()
+    }
+  }).catch(console.error);
 }
 
 function openModal() {

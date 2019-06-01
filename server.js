@@ -3,17 +3,18 @@ const cluster = require('cluster');
 if (cluster.isMaster) {
   const cpuCount = require('os').cpus().length;
 
-  // Create a worker for each CPU
   for (let i = 0; i < cpuCount; i += 1) {
     cluster.fork();
   }
 } else {
   const express = require('express');
+  const compression = require('compression');
   const bodyParser = require('body-parser');
   const app = express();
 
   const blog = require('./controllers/blog');
 
+  app.use(compression());
   app.use(bodyParser.json());
   app.use(bodyParser.urlencoded({
     extended: true,

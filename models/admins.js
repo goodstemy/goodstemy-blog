@@ -13,35 +13,21 @@ sequelize
     console.error('Unable to connect to the database:', err);
   });
 
-class Post extends Model {}
+class Admin extends Model {}
 
-Post.init({
-  title: {
-    type: Sequelize.STRING,
-    allowNull: false
-  },
-  description: {
+Admin.init({
+  name: {
     type: Sequelize.STRING,
     allowNull: false,
-    defaultValue: ""
   },
-  body: {
+  password: {
     type: Sequelize.STRING,
-    allowNull: false
-  },
-  likes: {
-    type: Sequelize.INTEGER,
-    allowNull: false,
-    defaultValue: 0
-  },
-  createdAt: {
-    type: Sequelize.DATE,
     allowNull: false
   }
 }, {
   sequelize,
-  modelName: 'posts',
+  modelName: 'admins',
   timestamps: false
 });
 
-module.exports = Post;
+module.exports = Admin;

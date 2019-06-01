@@ -1,6 +1,8 @@
+require('dotenv').config();
+
 const Sequelize = require('sequelize');
 const Model = Sequelize.Model;
-const sequelize = new Sequelize('postgres://ivan:@localhost:5432/postgres');
+const sequelize = new Sequelize(process.env.POSTGRES_URI);
 
 sequelize
   .authenticate()
